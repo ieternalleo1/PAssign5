@@ -1,15 +1,16 @@
 
 import java.util.ArrayList;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author jovau
+ * File: assignments/PAssign2.java
+ * Course: CSCI 1302
+ * Author: Jovaun McGregor
+ * Created on: Feb 11, 2017
+ * Last Modified: Feb 14, 2017
+ * Description: Create character type mockups and test default value for a boss
+ * encounter
  */
+
 public class PAssign5 {
 
     public static void main(String[] args) {
@@ -19,41 +20,52 @@ public class PAssign5 {
         CharacterType n1 = new Necromancer();
         CharacterType g1 = new Guardian();
         
-        System.out.println(w1.toString());
-
-//        //Collect all characters into a collection
-//        ArrayList<CharacterType> Party = new ArrayList<>();
-//        Party.add(w1);
-//        Party.add(m1);
-//        Party.add(n1);
-//        Party.add(g1);
-//
-//        //Boss health and level
-//        int bossHealth = 3200;
-//        int bossLevel = 300;
-//
-//        //find total party health and level and print character info
-//        int partyHealth = 0;
-//        int partyLevel = 0;
-//        for (CharacterType characters : Party) {
-//            partyHealth += characters.getHealthPool();
-//            partyLevel += characters.getLevel();
-//            characters.toString();
-//        }
-//        
-//       //search for instance of a warrior class
-//       boolean warCheck = false;
-//       for (CharacterType characters : Party){
-//          if(characters instanceof Warrior)
-//          {
-//              warCheck = true;
-//          }
-//       }       
-//       boolean SSCheck = false;
+//        w1.setHealthPool(50);
 
 
+        //Collect all characters into a collection
+        ArrayList<CharacterType> Party = new ArrayList<>();
+        Party.add(w1);
+        Party.add(g1);
+        Party.add(m1);
+        Party.add(n1);
+
+        //Boss health and level
+        int bossHealth = 3200;
+        int bossLevel = 300;
+
+        //find total party health and level and print character info
+        int partyHealth = 0;
+        int partyLevel = 0;
+        for (CharacterType characters : Party) {
+            partyHealth += characters.getHealthPool();
+            partyLevel += characters.getLevel();
+            System.out.println(characters.toString() + "\n");
+        }
+
+        //search for instance of a warrior class
+        boolean warCheck = false;
+        for (CharacterType characters : Party) {
+            if (characters instanceof Warrior) {
+                warCheck = true;
+            }
+        }
+        
+        //search for SpecialSkill Fire Storm
+        boolean ssCheck = false;
+        for (CharacterType characters : Party) {
+            if (characters.getSpecialSkill().getName().equals("Fire Storm")) {
+                ssCheck = true;
+            }
+        }
+        System.out.println("Total HP: " + partyHealth);
+        System.out.println("Total Level: " + partyLevel);
+        if (partyHealth >= bossHealth && partyLevel >= bossLevel &&  warCheck == true && ssCheck == true){
+            System.out.println("Party is eligible for Boss");
+        }
+        else
+            System.out.println("Party is ineligible for Boss");
     }
-
 } //end PAssign5 class
 
 class CharacterType {
@@ -62,7 +74,7 @@ class CharacterType {
     private String name;
     private int level;
     private int healthPool;
-    SpecialSkill specialSkill;
+    SpecialSkill specialSkill = new SpecialSkill();
 
     //Constructors
     public CharacterType() {
@@ -106,8 +118,7 @@ class CharacterType {
 
     @Override
     public String toString() {
-        return this.getName() + "Char, " + "Level " + this.getLevel() + ", " + getHealthPool() + "HP"
-            + this.specialSkill.toString();
+        return this.getName() + ", " + "Level " + this.getLevel() + ", " + getHealthPool() + "HP";
     }
 }
 
@@ -139,7 +150,7 @@ class SpecialSkill {
 
     @Override
     public String toString() {
-        return "/n Special Skill: " + this.getName() + " (" + this.getCooldown() + ")";
+        return "\nSpecial Skill: " + this.getName() + " (" + this.getCooldown() + "s)";
     }
 
 }
@@ -147,12 +158,11 @@ class SpecialSkill {
 class Warrior extends CharacterType {
 
     private int rage;
-    
+
     public Warrior() {
         super();
-        SpecialSkill ssWar = new SpecialSkill();
-        ssWar.setCooldown(180);
-        ssWar.setName("Fury");
+        specialSkill.setCooldown(180);
+        specialSkill.setName("Fury");
         super.setName("Warrior Char");
         super.setLevel(100);
         super.setHealthPool(900);
@@ -170,7 +180,7 @@ class Warrior extends CharacterType {
 
     @Override
     public String toString() {
-        return super.toString() ; //To change body of generated methods, choose Tools | Templates.
+        return super.toString() + specialSkill.toString() + "\nRage: " + this.getRage(); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
@@ -178,11 +188,11 @@ class Warrior extends CharacterType {
 class Guardian extends CharacterType {
 
     private int healingPower;
+   
 
     public Guardian() {
-        SpecialSkill ssGuard = new SpecialSkill();
-        ssGuard.setName("Protection");
-        ssGuard.setCooldown(90);
+        specialSkill.setName("Protection");
+        specialSkill.setCooldown(90);
         super.setName("Guardian Char");
         super.setLevel(100);
         super.setHealthPool(1000);
@@ -194,8 +204,13 @@ class Guardian extends CharacterType {
         return healingPower;
     }
 
-    public  void setHealingPower(int healingPower) {
-        
+    public void setHealingPower(int healingPower) {
+        this.healingPower = healingPower;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + specialSkill.toString() + "\nHealing Power: " + this.getHealingPower(); //To change body of generated methods, choose Tools | Templates.
     }
 }
 
@@ -204,9 +219,8 @@ class Mage extends CharacterType {
     private int mana;
 
     public Mage() {
-        SpecialSkill ssMage = new SpecialSkill();
-        ssMage.setName("Fire Storm");
-        ssMage.setCooldown(120);
+        specialSkill.setName("Fire Storm");
+        specialSkill.setCooldown(120);
         super.setName("Mage Char");
         super.setLevel(100);
         super.setHealthPool(800);
@@ -223,9 +237,9 @@ class Mage extends CharacterType {
 
     @Override
     public String toString() {
-        return super.toString();
+        return super.toString() + specialSkill.toString() + "\nMana: " + this.getMana(); //To change body of generated methods, choose Tools | Templates.
     }
-        
+
 }
 
 class Necromancer extends CharacterType {
@@ -233,10 +247,9 @@ class Necromancer extends CharacterType {
     private int lifeForce;
 
     public Necromancer() {
-        SpecialSkill ssNecro = new SpecialSkill();
-        ssNecro.setName("Death Magic");
-        ssNecro.setCooldown(60);
-        super.setName("Necromance Char");
+        specialSkill.setName("Death Magic");
+        specialSkill.setCooldown(60);
+        super.setName("Necromancer Char");
         super.setLevel(100);
         super.setHealthPool(850);
         setLifeForce(15);
@@ -250,9 +263,10 @@ class Necromancer extends CharacterType {
     public void setLifeForce(int lifeForce) {
         this.lifeForce = lifeForce;
     }
-    
+
     @Override
     public String toString() {
-        return super.toString();
+        return super.toString() + specialSkill.toString() + "\nLife Force: " + this.getLifeForce(); //To change body of generated methods, choose Tools | Templates.
     }
 }
+
